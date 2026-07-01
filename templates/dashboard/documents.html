@@ -1,0 +1,135 @@
+{% extends 'partials/base.html' %}
+{% block title %}
+Documents
+{% endblock %}
+{% block content %}
+
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
+  <!-- Page heading -->
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900">Documents</h1>
+      <p class="mt-1 text-sm text-slate-500">History of files uploaded to the system.</p>
+    </div>
+    <span class="rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
+      {{ documents|length|default:"0" }} total files
+    </span>
+  </div>
+
+  <!-- Section: Add document -->
+  <details class="mb-6 rounded-lg bg-white shadow-sm open:pb-6" {% if form_errors %}open{% endif %}>
+    <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4">
+      <h2 class="text-sm font-semibold text-slate-900">Add document</h2>
+      <span
+        class="inline-flex items-center gap-1 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-violet-700">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" class="size-3.5">
+          <path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        New upload
+      </span>
+    </summary>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-documents' %}"
+      class="border-t border-slate-100 px-6 pt-5">
+      {% csrf_token %}
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label for="doc_name" class="block text-xs font-medium text-slate-600">Document name</label>
+          <input type="text" id="doc_name" name="name" required
+            class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+            placeholder="e.g. Warehouse Manifest">
+        </div>
+
+        <div>
+          <label for="doc_uploaded_by" class="block text-xs font-medium text-slate-600">Uploaded by</label>
+          <input type="text" id="doc_uploaded_by" name="uploaded_by" required
+            class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+            placeholder="Your name">
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="doc_file" class="block text-xs font-medium text-slate-600">File</label>
+          <input type="file" id="doc_file" name="file" required
+            class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-violet-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-violet-700 hover:file:bg-violet-100">
+        </div>
+      </div>
+
+      <div class="mt-5 flex justify-end gap-3">
+        <button type="submit"
+          class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">
+          Upload document
+        </button>
+      </div>
+    </form>
+  </details>
+
+  <!-- Section: Upload history -->
+  <section class="rounded-lg bg-white shadow-sm">
+    <div class="border-b border-slate-100 px-6 py-4">
+      <h2 class="text-sm font-semibold text-slate-900">Recently added files</h2>
+    </div>
+
+    {% if documents %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-100">
+        <thead>
+          <tr class="text-left text-xs font-medium uppercase tracking-wide text-slate-400">
+            <th class="px-6 py-3">File name</th>
+            <th class="px-6 py-3">Type</th>
+            <th class="px-6 py-3">Size</th>
+            <th class="px-6 py-3">Uploaded by</th>
+            <th class="px-6 py-3">Date added</th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for doc in documents %}
+          <tr class="hover:bg-slate-50">
+            <td class="px-6 py-3">
+              <div class="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  class="size-5 shrink-0 text-slate-400">
+                  <path
+                    d="M7 3.75h7.5L19 8.25V18a2.25 2.25 0 0 1-2.25 2.25H7A2.25 2.25 0 0 1 4.75 18V6A2.25 2.25 0 0 1 7 3.75Z"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M14.5 3.75V8.25H19" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span class="text-sm font-medium text-slate-800">{{ doc.name }}</span>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-sm">
+              <span
+                class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium uppercase text-slate-600">{{ doc.file_type }}</span>
+            </td>
+             
+            <td class="px-6 py-3 text-sm tabular-nums text-slate-500">{{ doc.size }}</td>
+            <td class="px-6 py-3 text-sm text-slate-500">{{ doc.uploaded_by }}</td>
+            <td class="px-6 py-3 text-sm text-slate-500">{{ doc.date_added }}</td>
+            <td class="px-6 py-3 text-right text-sm">
+              <div class="flex items-center justify-end gap-3">
+                <a href="{{ doc.file_url }}" class="font-medium text-violet-600 hover:text-violet-800">Download</a>
+                <button type="submit" class="font-medium text-rose-600 hover:text-rose-800">
+                  Delete
+                </button>
+
+                
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="px-6 py-10 text-center">
+      <p class="text-sm text-slate-500">No files uploaded yet.</p>
+      <p class="mt-1 text-xs text-slate-400">Files you add to the system will show up here.</p>
+    </div>
+    {% endif %}
+  </section>
+
+</div>
+
+{% endblock %}

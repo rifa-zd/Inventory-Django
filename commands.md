@@ -21,3 +21,11 @@ python manage.py startapp dashboard #app is like for a website(project) there ar
 # pip install psycopg2-binary
 
 
+> <!-- <form method="POST" action="{% url 'dashboard:delete_document' doc.id %}"
+                      onsubmit="return confirm('Delete {{ doc.name }}? This cannot be undone.');">
+                  {% csrf_token %} -->
+                  dlt button should be here
+                  
+                <!-- </form> -->
+
+
