@@ -15,6 +15,9 @@ python manage.py runserver
 
 python manage.py startapp dashboard #app is like for a website(project) there are-users, shops, - the apps  
 
+python manage.py makemigrations dashboard
+python manage.py migrate
+
 ```
 
 > **psycopg2-binary** = the driver that lets Python/Django talk to PostgreSQL
@@ -23,12 +26,5 @@ python manage.py startapp dashboard #app is like for a website(project) there ar
 # Install PostgreSQL adapter for Django - skip for now working with sqlite
 # pip install psycopg2-binary
 
-
-> <!-- <form method="POST" action="{% url 'dashboard:delete_document' doc.id %}"
-                      onsubmit="return confirm('Delete {{ doc.name }}? This cannot be undone.');">
-                  {% csrf_token %} -->
-                  dlt button should be here
-                  
-                <!-- </form> -->
 
 

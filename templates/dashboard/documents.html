@@ -103,18 +103,23 @@ Documents
               <span
                 class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium uppercase text-slate-600">{{ doc.file_type }}</span>
             </td>
-             
-            <td class="px-6 py-3 text-sm tabular-nums text-slate-500">{{ doc.size }}</td>
+
+            <td class="px-6 py-3 text-sm tabular-nums text-slate-500">{{ doc.size_display }}</td>
             <td class="px-6 py-3 text-sm text-slate-500">{{ doc.uploaded_by }}</td>
             <td class="px-6 py-3 text-sm text-slate-500">{{ doc.date_added }}</td>
             <td class="px-6 py-3 text-right text-sm">
               <div class="flex items-center justify-end gap-3">
                 <a href="{{ doc.file_url }}" class="font-medium text-violet-600 hover:text-violet-800">Download</a>
-                <button type="submit" class="font-medium text-rose-600 hover:text-rose-800">
-                  Delete
-                </button>
 
-                
+                <form method="POST" action="{% url 'dashboard-dlt-doc' doc.id %}"
+                  onsubmit="return confirm('Delete {{ doc.name }}? This cannot be undone.');">
+                  {% csrf_token %}
+                  <button type="submit" class="font-medium text-rose-600 hover:text-rose-800">
+                    Delete
+                  </button>
+                </form>
+
+
               </div>
             </td>
           </tr>
