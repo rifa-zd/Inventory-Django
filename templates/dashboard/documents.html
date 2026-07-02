@@ -109,7 +109,7 @@ Documents
             <td class="px-6 py-3 text-sm text-slate-500">{{ doc.date_added }}</td>
             <td class="px-6 py-3 text-right text-sm">
               <div class="flex items-center justify-end gap-3">
-                <a href="{{ doc.file_url }}" class="font-medium text-violet-600 hover:text-violet-800">Download</a>
+                <a href="{{ doc.file.url }}" class="font-medium text-violet-600 hover:text-violet-800">Download</a>
 
                 <form method="POST" action="{% url 'dashboard-dlt-doc' doc.id %}"
                   onsubmit="return confirm('Delete {{ doc.name }}? This cannot be undone.');">
